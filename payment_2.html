@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AURA 2026 | Complete Payment</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&display=swap');
+    
+    .font-gaming { font-family: 'Orbitron', sans-serif; }
+    .font-subhead { font-family: 'Rajdhani', sans-serif; }
+    .bg-cyber-dark { background-color: #0a0d14; }
+    .bg-card-cyber { background-color: #121722; }
+    
+    .cyan-glow-btn {
+      background: linear-gradient(135deg, #00f0ff 0%, #00a8ff 100%);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+    .cyan-glow-btn:hover {
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.7);
+    }
+
+    .text-neon-cyan { color: #00f0ff; }
+    .text-neon-pink { color: #ff007f; }
+  </style>
+</head>
+<body class="bg-cyber-dark text-gray-200 font-sans antialiased selection:bg-cyan-400 selection:text-black min-h-screen flex flex-col justify-between">
+
+  <!-- TOP NAVBAR -->
+  <nav class="border-b border-cyan-900/40 bg-black/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center space-x-3">
+        <i data-lucide="crown" class="text-neon-cyan w-7 h-7"></i>
+        <span class="font-gaming text-lg font-black text-white tracking-wider">
+          AURA <span class="text-neon-pink">2026</span>
+        </span>
+      </a>
+      <span class="text-xs bg-amber-500/10 border border-amber-500/30 text-amber-400 px-3 py-1 rounded-full font-subhead font-bold uppercase tracking-wider">
+        Step 2 of 2: Payment
+      </span>
+    </div>
+  </nav>
+
+  <!-- MAIN PAYMENT SECTION -->
+  <main class="max-w-xl w-full mx-auto px-4 py-10">
+    <div class="bg-card-cyber border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      
+      <div class="text-center pb-6 border-b border-gray-800">
+        <span class="text-[11px] font-subhead font-bold uppercase tracking-widest text-neon-cyan bg-cyan-950/80 border border-cyan-500/30 px-3 py-1 rounded-full">
+          Registration Fee: ₹100
+        </span>
+        <h1 class="font-gaming text-2xl font-black text-white mt-3">Complete Squad Payment</h1>
+        <p class="text-xs text-gray-400 mt-1">
+          Team: <span id="display-team-name" class="font-bold text-amber-400">Loading...</span>
+        </p>
+        <p class="text-[11px] text-gray-500 mt-0.5 font-mono">
+          ID: <span id="display-reg-id" class="text-gray-400">--</span>
+        </p>
+      </div>
+
+      <div id="payment-form-container" class="space-y-6 pt-6">
+        <div class="bg-black/40 border border-gray-800 rounded-xl p-4 text-xs text-gray-300 space-y-2">
+          <p class="font-bold text-neon-cyan uppercase tracking-wider flex items-center gap-1.5">
+            <i data-lucide="info" class="w-4 h-4"></i> How to Pay (₹100)
+          </p>
+          <ol class="list-decimal list-inside space-y-1 text-gray-400">
+            <li>Scan the QR code or <strong class="text-white">Copy the UPI ID</strong> below.</li>
+            <li>Open Google Pay, PhonePe, or Paytm and select <strong class="text-white">Pay UPI ID</strong>.</li>
+            <li>Enter <strong class="text-amber-400">₹100</strong> and complete the transaction.</li>
+            <li>Copy the 12-digit UTR/Ref No. from the receipt and submit it below!</li>
+          </ol>
+        </div>
+
+        <div class="flex flex-col items-center justify-center p-5 bg-black/70 border border-cyan-500/30 rounded-xl text-center">
+          <img src="images/upi_qr.png" alt="UPI Payment QR Code" 
+            onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=yatasiddhartha33-2@oksbi%26am=100%26cu=INR'" 
+            class="w-48 h-48 rounded-lg border-2 border-cyan-500/50 shadow-[0_0_20px_rgba(0,240,255,0.2)]" />
+          
+          <p class="text-xs font-bold text-gray-300 mt-3">Scan with GPay, PhonePe, or Paytm</p>
+          
+          <div class="mt-3 flex items-center justify-between bg-black border border-cyan-500/50 rounded-lg p-2.5 max-w-sm w-full">
+            <span id="upi-text" class="text-xs font-mono font-bold text-amber-400 select-all">yatasiddhartha33-2@oksbi</span>
+            <button type="button" onclick="copyUpiId()" id="copy-btn" class="bg-cyan-500/20 text-neon-cyan hover:bg-cyan-500/30 text-[11px] font-bold px-3 py-1.5 rounded transition border border-cyan-500/50 flex items-center gap-1">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy ID
+            </button>
+          </div>
+        </div>
+
+        <form id="utr-form" class="pt-4 border-t border-gray-800 space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase text-gray-300 mb-1">
+              Enter 12-Digit UTR / Transaction Ref No. *
+            </label>
+            <div class="relative">
+              <i data-lucide="hash" class="w-4 h-4 text-gray-500 absolute left-3 top-3.5"></i>
+              <input type="text" id="utr-number" placeholder="e.g. 4278XXXXXXXX" required pattern="[0-9]{12}" maxlength="12"
+                class="w-full bg-black/50 border border-gray-800 rounded-lg py-2.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-cyan-400 font-mono tracking-widest transition" />
+            </div>
+            <p class="text-[10px] text-gray-400 mt-1">Check your payment receipt in GPay / PhonePe for the 12-digit number.</p>
+          </div>
+
+          <button type="submit" id="submit-utr-btn"
+            class="w-full cyan-glow-btn text-black font-gaming font-black py-3.5 rounded-xl text-sm uppercase tracking-wider transform hover:-translate-y-0.5 transition flex items-center justify-center space-x-2">
+            <span>Submit Payment for Verification</span>
+            <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+          </button>
+        </form>
+
+      </div>
+
+      <div id="success-container" class="hidden text-center py-8 space-y-4">
+        <div class="w-16 h-16 bg-green-500/20 border border-green-500 rounded-full flex items-center justify-center mx-auto text-green-400 shadow-[0_0_20px_rgba(34,197,94,0.4)]">
+          <i data-lucide="check-circle" class="w-10 h-10"></i>
+        </div>
+        <h2 class="font-gaming text-2xl font-extrabold text-white">Payment Submitted!</h2>
+        <p class="text-xs text-gray-300 max-w-sm mx-auto leading-relaxed">
+          Your UTR number <span id="saved-utr" class="text-neon-cyan font-mono font-bold"></span> has been logged. Our student coordinators will verify your payment shortly.
+        </p>
+        <div class="p-4 bg-black/50 border border-gray-800 rounded-xl text-left text-xs space-y-2">
+          <p class="text-gray-400"><strong>Status:</strong> <span class="text-amber-400 font-semibold">Verification Pending</span></p>
+          <p class="text-gray-400"><strong>Tournament:</strong> BGMI / Free Fire MAX</p>
+          <p class="text-gray-400"><strong>WhatsApp Group:</strong> Room ID & Password will be shared on your registered captain phone number.</p>
+        </div>
+        <a href="index.html" class="inline-block mt-4 text-xs font-bold text-neon-cyan hover:underline">
+          ← Back to Tournament Home
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="border-t border-gray-800/80 py-6 text-center text-xs text-gray-500 bg-black/60">
+    <p>© 2026 JNTUH Mahabubabad Freshers Event Committee. All rights reserved.</p>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC_84IJ_nR-6R4R-lekxtlFPP32URJXm1U",
+      authDomain: "jntuh-freshers.firebaseapp.com",
+      projectId: "jntuh-freshers",
+      storageBucket: "jntuh-freshers.firebasestorage.app",
+      messagingSenderId: "485511130838",
+      appId: "1:485511130838:web:712ae4c86628e3ce3f2377"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    lucide.createIcons();
+
+    window.copyUpiId = function() {
+      navigator.clipboard.writeText("yatasiddhartha33-2@oksbi");
+      const btn = document.getElementById('copy-btn');
+      btn.innerText = "Copied!";
+      setTimeout(() => {
+        btn.innerHTML = `<i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy ID`;
+        lucide.createIcons();
+      }, 2000);
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const registrationId = urlParams.get('id');
+    const teamName = urlParams.get('team');
+
+    if (teamName) {
+      document.getElementById('display-team-name').innerText = decodeURIComponent(teamName);
+    }
+    if (registrationId) {
+      document.getElementById('display-reg-id').innerText = registrationId;
+    }
+
+    document.getElementById('utr-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const utr = document.getElementById('utr-number').value.trim();
+      const btn = document.getElementById('submit-utr-btn');
+
+      if (!registrationId) {
+        alert("Registration ID not found. Please register again from home page.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = "Verifying & Saving...";
+
+      try {
+        const regRef = doc(db, "registrations", registrationId);
+        await updateDoc(regRef, {
+          utrNumber: utr,
+          paymentStatus: "VERIFICATION_PENDING",
+          paidAt: serverTimestamp()
+        });
+
+        document.getElementById('payment-form-container').classList.add('hidden');
+        document.getElementById('saved-utr').innerText = utr;
+        document.getElementById('success-container').classList.remove('hidden');
+
+      } catch (err) {
+        console.error("Error updating payment: ", err);
+        alert("Error saving UTR number. Please try again.");
+        btn.disabled = false;
+        btn.innerText = "Submit Payment for Verification";
+      }
+    });
+  </script>
+</body>
+</html>
