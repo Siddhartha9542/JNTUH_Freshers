@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eSports Registration</title>
+</head>
+<body>
+    <section class="registration-section">
+        <h2>eSports Event Registration</h2>
+        <form id="esportsForm">
+            <input type="text" id="teamName" placeholder="Team Name" required>
+            <input type="text" id="captainName" placeholder="Captain Name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="tel" id="phone" placeholder="Phone Number" required>
+            <select id="gameSelect" required>
+                <option value="BGMI">BGMI</option>
+                <option value="Free Fire">Free Fire</option>
+                <option value="Valorant">Valorant</option>
+            </select>
+            <button type="submit">Register Now</button>
+        </form>
+    </section>
+
+    <!-- Firebase SDK Imports -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            /* Keep your original Firebase config here */
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // Updated form submission targeting 'registrations'
+        document.getElementById('esportsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const registrationData = {
+                teamName: document.getElementById('teamName').value,
+                captainName: document.getElementById('captainName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                game: document.getElementById('gameSelect').value,
+                type: 'eSports',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                // FIXED: Directing submissions to 'registrations' so admin_2.html picks them up
+                await db.collection('registrations').add(registrationData);
+                alert('Registration Successful!');
+                document.getElementById('esportsForm').reset();
+            } catch (error) {
+                console.error('Error submitting registration:', error);
+                alert('Registration failed. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

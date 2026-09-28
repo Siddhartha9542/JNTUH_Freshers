@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score Admin</title>
+</head>
+<body>
+    <div class="score-container">
+        <h2>Match & Score Admin</h2>
+        
+        <form id="matchForm">
+            <label for="team1Select">Team 1:</label>
+            <select id="team1Select" required><option value="">Select Team 1</option></select>
+
+            <label for="team2Select">Team 2:</label>
+            <select id="team2Select" required><option value="">Select Team 2</option></select>
+
+            <input type="number" id="team1Score" placeholder="Team 1 Score" value="0">
+            <input type="number" id="team2Score" placeholder="Team 2 Score" value="0">
+
+            <select id="matchStatus">
+                <option value="Live">Live</option>
+                <option value="Completed">Completed</option>
+            </select>
+
+            <button type="submit">Update Score</button>
+        </form>
+    </div>
+
+    <!-- Firebase SDK Imports -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            /* Keep your original Firebase config here */
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // FIXED: Dynamically load teams from physical_teams into selection dropdowns
+        function loadTeamsIntoDropdowns() {
+            db.collection('physical_teams').get().then((snapshot) => {
+                const team1Select = document.getElementById('team1Select');
+                const team2Select = document.getElementById('team2Select');
+                
+                snapshot.forEach((doc) => {
+                    const team = doc.data();
+                    const name = team.teamName;
+                    if (name) {
+                        team1Select.innerHTML += `<option value="${name}">${name}</option>`;
+                        team2Select.innerHTML += `<option value="${name}">${name}</option>`;
+                    }
+                });
+            }).catch(error => console.error("Error fetching physical teams:", error));
+        }
+
+        // Save or update live match scores
+        document.getElementById('matchForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const matchData = {
+                team1: document.getElementById('team1Select').value,
+                team2: document.getElementById('team2Select').value,
+                score1: parseInt(document.getElementById('team1Score').value, 10),
+                score2: parseInt(document.getElementById('team2Score').value, 10),
+                status: document.getElementById('matchStatus').value,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                // FIXED: Stores scoring records in 'physical_matches'
+                await db.collection('physical_matches').add(matchData);
+                alert('Score updated successfully!');
+            } catch (error) {
+                console.error("Error saving match score:", error);
+                alert("Failed to update score.");
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', loadTeamsIntoDropdowns);
+    </script>
+</body>
+</html>
