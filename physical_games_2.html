@@ -76,7 +76,6 @@
               <option value="">-- Choose a Game --</option>
               <option value="Kabaddi">Kabaddi</option>
               <option value="Volleyball">Volleyball</option>
-        
               <option value="Kho Kho">Kho Kho</option>
             </select>
             <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 absolute right-3 top-3.5 pointer-events-none"></i>
@@ -93,6 +92,22 @@
               <option value="2">2nd Year</option>
               <option value="3">3rd Year</option>
               <option value="4">4th Year</option>
+            </select>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 absolute right-3 top-3.5 pointer-events-none"></i>
+          </div>
+        </div>
+
+        <!-- Branch Selection -->
+        <div>
+          <label class="block text-gray-300 font-bold uppercase mb-1">Select Branch *</label>
+          <div class="relative">
+            <select id="branchSelect" name="branch" required class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400 appearance-none">
+              <option value="">-- Select Branch --</option>
+              <option value="CSE">CSE</option>
+              <option value="CSD">CSD</option>
+              <option value="ECE">ECE</option>
+              <option value="MECH">MECH</option>
+              <option value="EEE">EEE</option>
             </select>
             <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 absolute right-3 top-3.5 pointer-events-none"></i>
           </div>
@@ -156,7 +171,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // Firebase configuration matching admin_2.html
     const firebaseConfig = {
       apiKey: "AIzaSyC_84IJ_nR-6R4R-lekxtlFPP32URJXm1U",
       authDomain: "jntuh-freshers.firebaseapp.com",
@@ -176,7 +190,6 @@
     const form = document.getElementById('physicalGamesForm');
     const submitBtn = document.getElementById('submitBtn');
 
-    // Add Player Row
     addMemberBtn.addEventListener('click', () => {
       const count = membersContainer.children.length + 1;
       const div = document.createElement('div');
@@ -198,7 +211,6 @@
       });
     };
 
-    // Save directly to Firebase Firestore ('physical_teams' collection)
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -211,6 +223,7 @@
       const payload = {
         game: formData.get('game'),
         year: formData.get('year'),
+        branch: formData.get('branch'),
         teamName: formData.get('teamName'),
         captainName: formData.get('captainName'),
         captainPhone: formData.get('captainPhone'),
@@ -222,7 +235,6 @@
         await addDoc(collection(db, "physical_teams"), payload);
         alert(`Team "${payload.teamName}" registered successfully for ${payload.game}!`);
         form.reset();
-        // Reset team members container back to 1 input
         membersContainer.innerHTML = `
           <div class="flex items-center gap-2">
             <input type="text" name="members[]" placeholder="Player 1 Name (Captain)" required class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-cyan-400" />
